@@ -1,74 +1,266 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Кто-то рядом — Радар</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кто-то рядом — Радар</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-  <div class="statusbar">
-    <span>23:47</span>
-    <div class="icons"><span>·</span><span class="bat"></span></div>
+  <div class="app">
+    <!-- СТАТУСБАР -->
+    <header class="statusbar">
+      <span class="status-time" id="clock">23:47</span>
+      <div class="icons">
+        <span>·</span>
+        <div class="bat"></div>
+      </div>
+    </header>
+
+    <!-- КОНТЕНТ ЭКРАНОВ -->
+    <main class="content-container">
+      
+      <!-- 1. ЭКРАН РАДАРА -->
+      <section id="screen-radar" class="screen active">
+        <header class="appbar">
+          <div class="title">Кто-то рядом</div>
+          <div class="sub">Твой квартал · радиус <span id="radar-radius-label">500 м</span></div>
+        </header>
+
+        <div class="radar-stage" id="radar-stage">
+          <div class="ring r3"></div>
+          <div class="ring r2"></div>
+          <div class="ring r1"></div>
+          <div class="you-dot" title="Это ты"></div>
+          <!-- Динамические точки соседей генерируются JS -->
+          <div class="radar-tip" id="radar-tip">Загрузка радара...</div>
+        </div>
+
+        <div class="quick-row">
+          <button class="chip active" data-filter="all">Все</button>
+          <button class="chip" data-filter="🔁 Одолжить">🔁 Одолжить</button>
+          <button class="chip moss" data-filter="🌱 Отдам">🌱 Отдам</button>
+          <button class="chip slate" data-filter="❓ Вопрос">❓ Вопрос</button>
+        </div>
+
+        <div class="cards" id="radar-cards">
+          <!-- Динамические карточки -->
+        </div>
+
+        <p class="radar-note" id="radar-note">
+          Загрузка информации о квартале...
+        </p>
+      </section>
+
+      <!-- 2. ЭКРАН ЛЕНТЫ -->
+      <section id="screen-feed" class="screen">
+        <header class="appbar">
+          <div class="row">
+            <span class="title">Рядом с тобой</span>
+            <span class="more" id="refresh-feed-btn" title="Обновить">↻</span>
+          </div>
+          <div class="sub" id="feed-count-sub">Загрузка публикаций...</div>
+        </header>
+
+        <div class="feed-filters">
+          <button class="chip active" data-feed-filter="all">Все</button>
+          <button class="chip" data-feed-filter="🔁 Одолжить">🔁 Одолжить</button>
+          <button class="chip moss" data-feed-filter="🌱 Отдам">🌱 Отдам</button>
+          <button class="chip slate" data-feed-filter="❓ Вопрос">❓ Вопрос</button>
+        </div>
+
+        <div class="feed" id="feed-list">
+          <!-- Посты генерируются JS -->
+        </div>
+      </section>
+
+      <!-- 3. ЭКРАН СОЗДАНИЯ -->
+      <section id="screen-create" class="screen">
+        <header class="appbar">
+          <div class="title">Новая вспышка</div>
+          <div class="sub">Оставь сообщение на карте своего квартала</div>
+        </header>
+
+        <form id="create-post-form" class="create-form">
+          <div class="field-label">Категория</div>
+          <div class="type-selector">
+            <div class="type-opt active" data-type="🔁 Одолжить" data-class="amber">
+              <span>🔁</span> Одолжить
+            </div>
+            <div class="type-opt" data-type="🌱 Отдам" data-class="moss">
+              <span>🌱</span> Отдам
+            </div>
+            <div class="type-opt" data-type="❓ Вопрос" data-class="slate">
+              <span>❓</span> Вопрос
+            </div>
+          </div>
+
+          <div class="field-label">Текст сообщения</div>
+          <div class="textarea-wrap">
+            <textarea id="post-text" placeholder="Напишите, что вам нужно одолжить, отдаете ли вы что-то или задайте вопрос соседям..." required maxlength="280"></textarea>
+            <div class="char-count"><span id="char-counter">0</span>/280</div>
+          </div>
+
+          <div class="field-label">Время жизни на карте</div>
+          <select id="post-ttl" class="select-field">
+            <option value="1">1 час</option>
+            <option value="2" selected>2 часа</option>
+            <option value="6">6 часов</option>
+            <option value="24">24 часа</option>
+          </select>
+
+          <div class="info-line">
+            <span>💡</span>
+            <div>Сообщение станет доступно жителям в радиусе 500 метров и автоматически погаснет после истечения времени.</div>
+          </div>
+
+          <button type="submit" class="cta-btn primary">Зажечь окно</button>
+        </form>
+      </section>
+
+      <!-- 4. ЭКРАН ПРОФИЛЯ -->
+      <section id="screen-profile" class="screen">
+        <div class="id-card">
+          <div class="glow-dot">
+            <div class="ring"></div>
+            <div class="ring r2"></div>
+            <div class="core"></div>
+          </div>
+          <div class="win-name" id="profile-name">Окно №1</div>
+          <div class="since" id="profile-since">на карте с сегодняшнего дня</div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="num" id="stat-posts">0</div>
+            <div class="lbl">сообщений</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="stat-responses">12</div>
+            <div class="lbl">откликов</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="stat-favs">0</div>
+            <div class="lbl">в избранном</div>
+          </div>
+        </div>
+
+        <div class="section-lbl">Видимость и настройки</div>
+        <div class="list">
+          <div class="row" id="change-radius-btn">
+            <div class="left"><span class="ico">◎</span>Радиус показа</div>
+            <div class="val"><span id="radius-val-display">500 м</span> <span class="chev">›</span></div>
+          </div>
+          <div class="row">
+            <div class="left"><span class="ico">🔔</span>Уведомления</div>
+            <div class="toggle active" id="toggle-notifs"></div>
+          </div>
+          <div class="row">
+            <div class="left"><span class="ico">👁</span>Показывать в радаре</div>
+            <div class="toggle active" id="toggle-radar"></div>
+          </div>
+        </div>
+
+        <div class="section-lbl">Избранное и история</div>
+        <div class="list">
+          <div class="row" id="view-favs-btn">
+            <div class="left"><span class="ico">★</span>Избранные сообщения</div>
+            <div class="val"><span id="favs-count-badge">0</span> <span class="chev">›</span></div>
+          </div>
+          <div class="row" id="view-my-posts-btn">
+            <div class="left"><span class="ico">☰</span>Мои публикации</div>
+            <div class="val"><span class="chev">›</span></div>
+          </div>
+        </div>
+
+        <div class="section-lbl">Аккаунт</div>
+        <div class="list">
+          <div class="row" id="auth-action-btn">
+            <!-- Динамически заменяется на "Войти" или "Выйти" -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- НИЖНЯЯ НАВИГАЦИЯ -->
+    <nav class="navbar">
+      <button class="item active" data-target="screen-radar">
+        <span class="dot">◎</span>
+        <span>Радар</span>
+      </button>
+      <button class="item" data-target="screen-feed">
+        <span class="dot">☰</span>
+        <span>Лента</span>
+      </button>
+      <button class="item" data-target="screen-create">
+        <span class="dot">+</span>
+        <span>Новое</span>
+      </button>
+      <button class="item" data-target="screen-profile">
+        <span class="dot">▢</span>
+        <span>Ты</span>
+      </button>
+    </nav>
   </div>
 
-  <header class="appbar">
-    <div class="title">Кто-то рядом</div>
-    <div class="sub">Твой квартал · радиус 500 м</div>
-  </header>
+  <!-- МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ / РЕГИСТРАЦИИ -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+      
+      <div id="auth-step-phone">
+        <div class="hero-icon">
+          <div class="ring r2"></div>
+          <div class="ring r1"></div>
+          <div class="you-dot"></div>
+        </div>
+        <div class="title" id="auth-title">Стань окном на карте</div>
+        <p class="lead" id="auth-lead">Без имени, без фото — просто светом в нужный момент, когда рядом кому-то что-то нужно.</p>
 
-  <main class="content">
-    <section class="radar-stage">
-      <div class="ring r3"></div>
-      <div class="ring r2"></div>
-      <div class="ring r1"></div>
-      <div class="you-dot"></div>
-      <div class="neighbor n1"></div>
-      <div class="neighbor n2"></div>
-      <div class="neighbor n3"></div>
-      <div class="neighbor n4"></div>
-      <div class="radar-tip">чьё-то окно горит уже третью ночь</div>
-    </section>
+        <div class="field-label">Номер телефона</div>
+        <div class="input-field">
+          <span class="code">+7</span>
+          <input type="tel" id="phone-input" placeholder="900 123-45-67" maxlength="13">
+        </div>
 
-    <section class="quick-row">
-      <span class="chip active">🔁 Одолжить</span>
-      <span class="chip moss">🌱 Отдам</span>
-      <span class="chip slate">❓ Спросить</span>
-    </section>
+        <div class="info-line">🔒 Номер нужен только для проверки. Соседи его не увидят — там ты просто «Окно».</div>
 
-    <section class="cards">
-      <article class="card">
-        <h3>Сосед сверху</h3>
-        <p>Третью ночь горит окно. Может, пора познакомиться?</p>
-        <button class="btn">Постучать</button>
-      </article>
-      <article class="card">
-        <h3>Двор напротив</h3>
-        <p>Кто-то оставил книгу на лавочке. Возможно, это знак.</p>
-        <button class="btn">Посмотреть</button>
-      </article>
-      <article class="card">
-        <h3>Твой подъезд</h3>
-        <p>2 окна светятся. Ты — тоже просто окно на этой карте.</p>
-        <button class="btn">Открыть радар</button>
-      </article>
-    </section>
+        <button class="cta-btn primary" id="send-code-btn">Получить код</button>
+        <div class="switch-auth" id="switch-auth-mode">
+          Уже светишься здесь? <b>Войти</b>
+        </div>
+      </div>
 
-    <p class="radar-note">4 окна светятся в радиусе 500 м. Ты — тоже просто окно на этой карте.</p>
-  </main>
+      <div id="auth-step-code" style="display:none;">
+        <div class="title">Введи код из SMS</div>
+        <p class="lead">Мы отправили проверочный код на номер <b id="display-phone-num">+7...</b></p>
 
-  <nav class="navbar">
-    <a class="item active"><span class="dot">◎</span>Радар</a>
-    <a class="item"><span class="dot">☰</span>Лента</a>
-    <a class="item"><span class="dot">+</span>Новое</a>
-    <a class="item"><span class="dot">▢</span>Ты</a>
-  </nav>
-</div>
+        <div class="field-label">Код из 4 цифр</div>
+        <div class="input-field">
+          <input type="text" id="code-input" placeholder="1234" maxlength="4" style="text-align:center; letter-spacing:8px; font-size:20px;">
+        </div>
 
-<script src="script.js"></script>
+        <button class="cta-btn primary" id="verify-code-btn">Подтвердить и войти</button>
+        <button class="cta-btn secondary" id="back-to-phone-btn" style="margin-top:8px;">Назад</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО ПРОСМОТРА ПОСТА / ОТКЛИКА -->
+  <div class="modal-overlay" id="post-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="post-modal-close">&times;</button>
+      <div id="post-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- УВЕДОМЛЕНИЯ (TOAST) -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
