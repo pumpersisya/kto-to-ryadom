@@ -1,0 +1,15 @@
+{
+  "name": "adaptive-app",
+  "version": "1.0.0",
+  "description": "Анонимная соседская сеть — адаптивный интерфейс",
+  "main": "cow.js",
+  "scripts": {
+    "start": "node cow.js"
+  },
+  "author": "Student",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cowsay": "^1.6.0"
+  }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кто-то рядом — Радар</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <div class="statusbar">
+    <span>23:47</span>
+    <div class="icons"><span>·</span><span class="bat"></span></div>
+  </div>
+
+  <header class="appbar">
+    <div class="title">Кто-то рядом</div>
+    <div class="sub">Твой квартал · радиус 500 м</div>
+  </header>
+
+  <main class="content">
+    <section class="radar-stage">
+      <div class="ring r3"></div>
+      <div class="ring r2"></div>
+      <div class="ring r1"></div>
+      <div class="you-dot"></div>
+      <div class="neighbor n1"></div>
+      <div class="neighbor n2"></div>
+      <div class="neighbor n3"></div>
+      <div class="neighbor n4"></div>
+      <div class="radar-tip">чьё-то окно горит уже третью ночь</div>
+    </section>
+
+    <section class="quick-row">
+      <span class="chip active">🔁 Одолжить</span>
+      <span class="chip moss">🌱 Отдам</span>
+      <span class="chip slate">❓ Спросить</span>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <h3>Сосед сверху</h3>
+        <p>Третью ночь горит окно. Может, пора познакомиться?</p>
+        <button class="btn">Постучать</button>
+      </article>
+      <article class="card">
+        <h3>Двор напротив</h3>
+        <p>Кто-то оставил книгу на лавочке. Возможно, это знак.</p>
+        <button class="btn">Посмотреть</button>
+      </article>
+      <article class="card">
+        <h3>Твой подъезд</h3>
+        <p>2 окна светятся. Ты — тоже просто окно на этой карте.</p>
+        <button class="btn">Открыть радар</button>
+      </article>
+    </section>
+
+    <p class="radar-note">4 окна светятся в радиусе 500 м. Ты — тоже просто окно на этой карте.</p>
+  </main>
+
+  <nav class="navbar">
+    <a class="item active"><span class="dot">◎</span>Радар</a>
+    <a class="item"><span class="dot">☰</span>Лента</a>
+    <a class="item"><span class="dot">+</span>Новое</a>
+    <a class="item"><span class="dot">▢</span>Ты</a>
+  </nav>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
